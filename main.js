@@ -211,4 +211,123 @@
 
         document.addEventListener('DOMContentLoaded', loadComments);
 
+        // Initialize Swiper after DOM and library loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof Swiper !== 'undefined') {
+                    var swiper = new Swiper(".mySwiper", {
+                        slidesPerView: 1,
+                        spaceBetween: 30,
+                        loop: true,
+                        lazy: true,
+                        autoplay: {
+                            delay: 5000,
+                            disableOnInteraction: false,
+                        },
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: ".swiper-button-next",
+                            prevEl: ".swiper-button-prev",
+                        },
+                        breakpoints: {
+                            // when window width is >= 768px
+                            768: {
+                                slidesPerView: 2
+                            },
+                            // when window width is >= 1024px
+                            1024: {
+                                slidesPerView: 3
+                            }
+                        }
+                    });
+                }
+            });
     
+            // Lazy load videos on click or scroll into view
+            document.addEventListener('DOMContentLoaded', function() {
+                const lazyVideos = document.querySelectorAll('video.lazy-video');
+                
+                lazyVideos.forEach(function(video) {
+                    const observer = new IntersectionObserver(function(entries) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                loadVideo(video);
+                                observer.unobserve(video);
+                            }
+                        });
+                    }, { rootMargin: '100px' });
+                    
+                    observer.observe(video);
+                    
+                    // Also load on click
+                    video.addEventListener('click', function() {
+                        loadVideo(video);
+                    });
+                });
+                
+                function loadVideo(video) {
+                    if (video.dataset.src) {
+                        video.src = video.dataset.src;
+                    }
+                    const sources = video.querySelectorAll('source[data-src]');
+                    sources.forEach(function(source) {
+                        source.src = source.dataset.src;
+                    });
+                    video.load();
+                }
+            });
+    
+            // Stock progress bar
+            document.addEventListener("DOMContentLoaded", () => {
+                const stockText = document.getElementById("stock-text-fil");
+                const stockProgress = document.getElementById("stock-progress-fil");
+    
+                if (stockText && stockProgress) {
+                    const TOTAL_STOCK = 500;    // Общий объем промо-запаса (для расчета процентов)
+                    const DECREASE_AMOUNT = 2;  // Количество, уменьшающееся за один интервал (имитация продажи)
+                    const MIN_REMAINING = 10;   // Минимальное количество, на котором останавливаемся
+                    
+                    // 1. Устанавливаем СЛУЧАЙНОЕ начальное количество оставшихся упаковок (от 10 до 60)
+                    let currentPackagesRemaining = Math.floor(Math.random() * (60 - MIN_REMAINING + 1)) + MIN_REMAINING; 
+                    
+                    let updateInterval; // Идентификатор для clearInterval
+    
+                    // 2. Функция обновления
+                    function updateStock() {
+                        // 3. Уменьшаем оставшееся количество (имитация продажи)
+                        if (currentPackagesRemaining > MIN_REMAINING) {
+                            currentPackagesRemaining -= DECREASE_AMOUNT; 
+                            // Убеждаемся, что не уйдет ниже минимума
+                            if (currentPackagesRemaining < MIN_REMAINING) {
+                                currentPackagesRemaining = MIN_REMAINING;
+                            }
+                        }
+                        
+                        // 4. Расчет процента ЗАПОЛНЕНИЯ (сколько ПРОДАНО)
+                        const packagesSold = TOTAL_STOCK - currentPackagesRemaining;
+                        const percentageFilled = (packagesSold / TOTAL_STOCK) * 100;
+    
+                        // 5. Обновляем текст
+                        stockText.textContent = `Natitirang ${currentPackagesRemaining} packages lang ng Cardio Tonus sa promo`;
+    
+                        // 6. Обновляем ширину прогресс-бара
+                        stockProgress.style.width = `${percentageFilled}%`;
+    
+                        // 7. Проверка на завершение
+                        if (currentPackagesRemaining <= MIN_REMAINING) {
+                            clearInterval(updateInterval); // Останавливаем таймер
+                            stockProgress.classList.remove('animate-pulse'); // Убираем моргание
+                            stockText.textContent = `Natitirang ${currentPackagesRemaining} packages lang ng Cardio Tonus sa promo`;
+                        }
+                    }
+    
+                    // 8. Первоначальная установка при загрузке страницы
+                    updateStock(); // Вызываем один раз для установки начального состояния и текста
+    
+                    // 9. Запускаем интервал (60 секунд = 60000 мс)
+                    updateInterval = setInterval(updateStock, 60000); 
+                }
+            });
+        
