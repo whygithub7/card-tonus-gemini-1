@@ -5,21 +5,21 @@
         
         // Lead Form Logic
         const leadForm = document.getElementById('lead-form');
-        leadForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            if (name.trim() === '' || phone.trim() === '') {
-                console.error('Please fill out all fields.');
-                return;
-            }
-            console.log('Order submitted:', { name, phone });
-            const orderFormContainer = document.getElementById('order_form');
-            orderFormContainer.innerHTML = `<div class="text-center text-green-700 py-8">
-                <h3 class="font-bold text-2xl">Salamat po! Natanggap na namin ang iyong order.</h3>
-                <p class="mt-2">Tatawagan ka ng aming operator para kumpirmahin ang iyong order.</p>
-            </div>`;
-        });
+        // leadForm.addEventListener('submit', function(e) {
+        //     e.preventDefault();
+        //     const name = document.getElementById('name').value;
+        //     const phone = document.getElementById('phone').value;
+        //     if (name.trim() === '' || phone.trim() === '') {
+        //         console.error('Please fill out all fields.');
+        //         return;
+        //     }
+        //     console.log('Order submitted:', { name, phone });
+        //     const orderFormContainer = document.getElementById('order_form');
+        //     orderFormContainer.innerHTML = `<div class="text-center text-green-700 py-8">
+        //         <h3 class="font-bold text-2xl">Salamat po! Natanggap na namin ang iyong order.</h3>
+        //         <p class="mt-2">Tatawagan ka ng aming operator para kumpirmahin ang iyong order.</p>
+        //     </div>`;
+        // });
 
         // Gemini API Feature Logic
         const geminiSubmitBtn = document.getElementById('gemini-submit-btn');
